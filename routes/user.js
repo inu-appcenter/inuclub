@@ -6,7 +6,7 @@ module.exports = function(){
     var userId = req.body.id;
     var userpw = req.body.id;
 
-    if(userId.length > 20 || userpw > 20) return res.status(400).send('너무 길게 입력하셨습니다.');
+    if(userId.length > 20 || userpw.length > 20) return res.status(400).send('너무 길게 입력하셨습니다.');
 
     var sql = 'SELECT num FROM club_authority WHERE authId = ? AND password = ?;';
     db.get().query(sql, [userId, userpw], function(err, rows){

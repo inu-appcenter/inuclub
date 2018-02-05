@@ -14,13 +14,13 @@ exports.info = function(req, res, next){            //동아리 소개 수정
 
   var updateArray = [introduce, representative, phone,
                       application, contents, clubnum];
-      nameArray = ['introduce', 'representative', 'phone',
-                      'application', 'contents', 'clubnum'];
+      nameArray = ['동아리 소개', '동아리 회장 이름', '연락처',
+                      '지원서 주소', '내용'];
       limited_Length = [20, 5, 13, 255, 1000];
 
   for(let i = 0; i < updateArray.length - 1; i++){
     if(updateArray[i].length > limited_Length[i])
-      return res.status(400).send(nameArray[i] + '의 길이가 너무 깁니다.');
+      return res.status(400).send(nameArray[i] + '의 제한길이를 확인해주세요.');
   }
 
   var sql = `UPDATE club_info
@@ -89,6 +89,6 @@ exports.image = function(req, res){                   //동아리 사진 수정
       }
   ], function (err) {
       if( err ) return res.status(400).send(err);
-      res.status(201);
+      res.sendStatus(201);
   });
 };
