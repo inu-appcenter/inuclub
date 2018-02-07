@@ -24,7 +24,7 @@ module.exports = function(){
     req.session.destroy(function(err){
       if(err) return next(err);
       req.session;
-      res.status(200).send('로그아웃 되었습니다.');
+      res.sendStatus(200);
     });
   });
 

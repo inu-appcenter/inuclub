@@ -14,8 +14,8 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-  if(err.status != 404) err = 'Invalid request..';
   log.logger(err);
+  if(err.status != 404) err = 'Invalid request..';
   res.status(err.status || 500).send('' + err);
 });
 

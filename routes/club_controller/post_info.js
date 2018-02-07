@@ -65,7 +65,7 @@ exports.image = function(req, res){                   //동아리 사진 수정
               callback('업로드에 실패하였습니다.');
             });
           } else {
-            var privious_img = rows[0]['image'+seq];
+            var privious_img = rows[0]['image'+seq];          //기존 이미지 이름
             var sql = 'UPDATE club_info SET image' + seq + ' = ? WHERE num = ?';
 
             db.get().query(sql, [upload_Img, clubnum], function(err, rows){

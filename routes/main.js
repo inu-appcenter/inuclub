@@ -3,7 +3,7 @@ module.exports = function(){
   const fs = require("fs");
   const path = require('path');
 
-  route.get('/', function(req, res){
+  route.get('/', function(req, res){      // 메인페이지. public/main_img 폴더의 사진들
     var main_img = [];
     var files =  fs.readdirSync(path.join(__dirname, '../public/main_img'));
     for(let i = 0; i < files.length; i++){

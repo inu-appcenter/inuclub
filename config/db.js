@@ -3,7 +3,7 @@ var pool;
 
 exports.connect = function(done){
   pool = mysql.createPool({
-    connectionLimit: 100,
+    connectionLimit: 100,         // pool 100개 생성
     host     : process.env._host,
     user     : process.env._user,
     password : process.env._password,

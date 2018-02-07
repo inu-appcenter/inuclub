@@ -2,7 +2,7 @@ const db = require('../../config/db');
 const arrayWrap = require("arraywrap");
 const NUMBER_OF_IMAGES = 4;
 
-const list_img = function(rows, callback){
+const list_img = function(rows, callback){              //list 사진 접근경로 수정
   for(let i = 0; i < rows.length; i++){
     if(rows[i].image1)
       rows[i].image1 = 'club_img/' + rows[i].image1;
@@ -10,7 +10,7 @@ const list_img = function(rows, callback){
   callback(rows);
 };
 
-const page_img = function(rows, callback){
+const page_img = function(rows, callback){              //page 사진 접근경로 수정
   for(let i = 1; i <= NUMBER_OF_IMAGES; i++){
     if(rows[0]['image' + i])
       rows[0]['image' + i] = 'club_img/' + rows[0]['image' + i];

@@ -11,7 +11,7 @@ exports.multerSetting = function(req, res){
       callback(null, uploadDir);
     },
     filename : function (req, file, callback) {
-      filename = 'club_' + req.params.clubnum + '_' + Date.now() + '.' + file.mimetype.split('/')[1];
+      filename = 'club_' + req.params.clubnum + '_' + Date.now() + '.' + file.mimetype.split('/')[1];   //파일명 = club_동아리번호_현재시각.확장자
       callback(null, filename);
     }
   });
@@ -29,7 +29,7 @@ exports.multerSetting = function(req, res){
   });
 };
 
-exports.deleteFile = function(location, filename, callback){
+exports.deleteFile = function(location, filename, callback){      //파일 삭제
   fs.unlink(path.join(__dirname, '../public/') + location + '/' + filename, function(err){
     if(err) log.logger(err);
     callback();
