@@ -4,6 +4,7 @@ module.exports = function(){
   const getEvent = require('./event_controller/getEvent');
   const postEvent = require('./event_controller/postEvent');
 
+  route.get('/list/', getEvent.total);                                   //이거 말고 달 단위로 날짜만....
   route.get('/list/:date', getEvent.list);                               //해당 날짜 목록
 
   route.post('/new', postEvent.new);                                     //일정 등록

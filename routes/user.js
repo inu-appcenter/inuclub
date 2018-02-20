@@ -5,7 +5,7 @@ module.exports = function(){
 //------------------login------------------
   route.post('/login', function(req, res){
     let userId = req.body.id;
-    let userpw = req.body.id;
+    let userpw = req.body.pw;
 
     let sql = 'SELECT num FROM club_authority WHERE authId = ? AND password = ?;';
     db.get().query(sql, [userId, userpw], function(err, rows){

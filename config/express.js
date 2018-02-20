@@ -15,6 +15,7 @@ module.exports = function(){
     console.log('Caught exception: ' + err);
   });
 
+  //public/폴더명 생성하기
   app.use('/club_img', express.static(path.join(__dirname, '../public/club_img')));
   app.use('/main_img', express.static(path.join(__dirname, '../public/main_img')));
   app.set('view engine', 'ejs');

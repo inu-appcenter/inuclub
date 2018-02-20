@@ -1,5 +1,14 @@
 const db = require('../../config/db');
 
+//---------------해당 날짜 일정 목록 ( temp )--------------- 이거 말고 달 단위로 날짜만....
+exports.total = function(req, res){
+  let sql = 'SELECT * FROM club_event ORDER BY date;';
+  db.get().query(sql, function(err, rows){
+    if(err) return res.sendStatus(400);
+    res.status(200).json(rows);
+  });
+};
+
 //---------------해당 날짜 일정 목록---------------
 exports.list = function(req, res){
   let date = req.params.date;
