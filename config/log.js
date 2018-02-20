@@ -7,7 +7,7 @@ if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
 const logFilename = path.join(__dirname, '../', logDir, '/created-logfile.log');
 const tsFormat = () => (new Date()).toLocaleTimeString();
 
-var logger = new (winston.Logger)({
+let logger = new (winston.Logger)({
   transports: [
     new (require('winston-daily-rotate-file'))({
       level: 'info',
@@ -19,6 +19,6 @@ var logger = new (winston.Logger)({
   ]
 });
 
-exports.logger = function(msg){
-  logger.info(msg);
+exports.logger = function(){
+  return logger;
 };

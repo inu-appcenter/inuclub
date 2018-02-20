@@ -9,7 +9,9 @@ module.exports = function(){
   const morgan = require('morgan');
   const app = express();
 
+  const log = require('./log');
   process.on('uncaughtException', function (err) {
+    log.logger().error(err);
     console.log('Caught exception: ' + err);
   });
 
@@ -29,6 +31,7 @@ module.exports = function(){
 
   db.connect(function(err){
     if(err){
+      log.logger().warn(err);
       console.log('Unable to connect to DB.');
       process.exit(1);
     }

@@ -1,24 +1,37 @@
 const db = require('./db');
 
+//------------------권한 체크------------------
 exports.checkPermission = function (req, res, next){
-  var userId = req.session.userId;
+  let userId = req.session.userId;
       clubnum = req.params.clubnum;
-      event_num = req.params.event_num;
+      eventnum = req.params.eventnum;
 
-  if(!userId) return res.status(401).send('Please log in.');
+  if(!userId) return res.sendStatus(401);
 
   if(clubnum){    //동아리 내용수정 및 사진수정 루트 접근시
-    var sql = 'SELECT num FROM club_authority WHERE num = ? AND authId = ?;';
-      db.get().query(sql, [clubnum, userId], function(err, rows){
-        if(err) next(err);
-        else if(rows.length > 0 ) next();
-        else
-          return res.status(403).send('You don\'t have permission.');
+    let sql = 'SELECT EXISTS (SELECT num FROM club_authority WHERE num = ? AND authId = ?) AS success;';
+    db.get().query(sql, [clubnum, userId], function(err, rows){
+      if(err) res.sendStatus(400);
+      else if(rows[0].success) next();
+      else
+        return res.sendStatus(403);
     });
-  } else if(event_num){     //행사 관련 수정,삭제 루트 접근시
-    //행사 수정,삭제 권한 여부, event_num을 통한 clubnum과 session의 id를 통한 clubnum비교? <--> 행사 등록여부는 위의 로직 이용
-    console.log('event_num' + event_num);
+  } else if(eventnum){     //행사 관련 수정,삭제 루트 접근시
+    let sql = `SELECT EXISTS
+                  (SELECT *
+                  FROM club_authority AS auth
+                  INNER JOIN club_event AS event
+                  ON auth.clubname = event.clubname
+                  WHERE event.eventnum = ? AND auth.authId = ?)
+              AS success;`;
+    db.get().query(sql, [eventnum, userId], function(err, rows){
+      if(err) res.sendStatus(400);
+      else if(rows[0].success) next();
+      else
+        return res.sendStatus(403);
+    });
+
   } else {
-    next('err');
+    return res.sendStatus(400);
   }
 };

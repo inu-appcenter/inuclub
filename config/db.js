@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-var pool;
+let pool;
 
 exports.connect = function(done){
   pool = mysql.createPool({

@@ -3,11 +3,12 @@ const path = require('path');
 const fs = require('fs');
 const log = require('./log');
 
+//------------------파일 업로드------------------
 exports.multerSetting = function(req, res){
-  var filename;
-  var storage = multer.diskStorage({
+  let filename;
+  let storage = multer.diskStorage({
     destination : function (req, file, callback) {
-      var uploadDir = path.join(__dirname, '../public/club_img/');
+      let uploadDir = path.join(__dirname, '../public/club_img/');
       callback(null, uploadDir);
     },
     filename : function (req, file, callback) {
@@ -29,9 +30,11 @@ exports.multerSetting = function(req, res){
   });
 };
 
-exports.deleteFile = function(location, filename, callback){      //파일 삭제
+//------------------파일 삭제------------------
+exports.deleteFile = function(location, filename, callback){
   fs.unlink(path.join(__dirname, '../public/') + location + '/' + filename, function(err){
-    if(err) log.logger(err);
+    if(err)
+      log.logger().info(err);
     callback();
   });
 };
