@@ -7,6 +7,7 @@ module.exports = function(){
   const db = require('./db');
   const helmet = require('helmet');
   const morgan = require('morgan');
+  const key = require('../key.json');
   const app = express();
 
   const log = require('./log');
@@ -14,7 +15,7 @@ module.exports = function(){
     log.logger().error(err);
     console.log('Caught exception: ' + err);
   });
-  
+
   //public/폴더명 생성하기
   app.use('/club_img', express.static(path.join(__dirname, '../public/club_img')));
   app.use('/main_img', express.static(path.join(__dirname, '../public/main_img')));
@@ -25,7 +26,7 @@ module.exports = function(){
   app.use(bodyParser.json());
 
   app.use(session({
-    secret: process.env._secret,
+    secret: key.secret,
     resave: false,
     saveUninitialized: true
   }));
