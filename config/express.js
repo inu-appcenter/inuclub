@@ -39,7 +39,8 @@ module.exports = function(){
     }
   });
 
-  app.use(helmet(), morgan('short'));
+  app.use(helmet());
+  app.use(morgan('short'));
 
   return app;
 };
