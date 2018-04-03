@@ -1,6 +1,7 @@
 module.exports = function(){
   const express = require('express');
   const path = require('path');
+  const favicon = require('serve-favicon');
   const ejs = require('ejs');
   const bodyParser = require('body-parser');
   const session = require('express-session');
@@ -19,6 +20,7 @@ module.exports = function(){
   //  public/폴더명 생성하기
   app.use('/club_img', express.static(path.join(__dirname, '../public/club_img')));
   app.use('/main_img', express.static(path.join(__dirname, '../public/main_img')));
+  app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname,'../views'));
 
