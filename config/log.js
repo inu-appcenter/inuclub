@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const winston = require('winston');
 
+/* 서버 컴퓨터 기준 시간으로 파일 생성 및 log기록 */
 const logDir = 'log';
 if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
 const logFilename = path.join(__dirname, '../', logDir, '/created-logfile.log');

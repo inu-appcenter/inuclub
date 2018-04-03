@@ -8,7 +8,7 @@ exports.checkPermission = function (req, res, next){
 
   if(!userId) return res.sendStatus(401);
 
-  if(clubnum){    //동아리 내용수정 및 사진수정 루트 접근시
+  if(clubnum){    //동아리 내용수정 및 사진수정 루트 접근시 : 해당 path 접근 시 동아리번호(num)와 세션id 검사
     let sql = 'SELECT EXISTS (SELECT num FROM club_authority WHERE num = ? AND authId = ?) AS success;';
     db.get().query(sql, [clubnum, userId], function(err, rows){
       if(err) res.sendStatus(400);
@@ -16,7 +16,7 @@ exports.checkPermission = function (req, res, next){
       else
         return res.sendStatus(403);
     });
-  } else if(eventnum){     //행사 관련 수정,삭제 루트 접근시
+  } else if(eventnum){     //행사 관련 수정,삭제 루트 접근시 : 해당 path 접근 시 이벤트번호(eventnum)와 세션id 검사 
     let sql = `SELECT EXISTS
                   (SELECT *
                   FROM club_authority AS auth

@@ -2,7 +2,7 @@ const db = require('../../config/db');
 const arrayWrap = require("arraywrap");
 const NUMBER_OF_IMAGES = 4;
 
-const list_img = function(rows, callback){              //list 사진 접근경로 수정
+const list_img = function(rows, callback){              //list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가
   for(let i = 0; i < rows.length; i++){
     if(rows[i].image1)
       rows[i].image1 = 'club_img/' + rows[i].image1;
@@ -10,7 +10,7 @@ const list_img = function(rows, callback){              //list 사진 접근경�
   callback(rows);
 };
 
-const page_img = function(rows, callback){              //page 사진 접근경로 수정
+const page_img = function(rows, callback){              //page 사진 접근경로 수정 : 사진파일 존재시 파일명 앞에 정적루트 추가
   for(let i = 1; i <= NUMBER_OF_IMAGES; i++){
     if(rows[0]['image' + i])
       rows[0]['image' + i] = 'club_img/' + rows[0]['image' + i];
@@ -62,6 +62,7 @@ exports.search = function(req, res){
   let terms = keyword[0].split('+');
   terms = '%' + terms + '%';
 
+  // 동아리 이름, 카테고리, 내용 검색
   let sql = `SELECT auth.num, auth.clubname, info.location, info.image1
               FROM club_authority AS auth
               INNER JOIN club_info AS info
@@ -80,6 +81,7 @@ exports.search = function(req, res){
 exports.info = function(req, res){
   let num = req.params.clubnum;
 
+  // clubnum을 통한 동아리 정보 가져오기
   let sql = `SELECT auth.num, auth.clubname, info.*
               FROM club_authority AS auth
               INNER JOIN club_info AS info
@@ -97,7 +99,7 @@ exports.info = function(req, res){
 //------------------해당 동아리 일정------------------
 exports.event = function(req, res) {
   let clubnum = req.params.clubnum;
-      sql = 'SELECT clubname FROM club_authority WHERE num = ?';
+      sql = 'SELECT clubname FROM club_authority WHERE num = ?;';
   db.get().query(sql, clubnum, function(err, rows){
     if(err || !rows.length) return res.sendStatus(400);
 

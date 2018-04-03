@@ -5,9 +5,10 @@ function updateEvent(sql, eventArray, callback) {
   const datePattern = /^(20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
   const timePattern = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
 
-  if(eventArray[0] && datePattern.test(eventArray[2]) && timePattern.test(eventArray[3])){   //유효성 검사
+  //이벤트 이름, 날짜, 시간 유효성 검사
+  if(eventArray[0] && datePattern.test(eventArray[2]) && timePattern.test(eventArray[3])){
 
-    for(let i = 0; i < eventArray.length - 3; i++)            //길이 검사
+    for(let i = 0; i < eventArray.length - 3; i++)            //일정이름, 장소 길이 검사
       if(eventArray[i] && eventArray[i].length > limited_Length[i])
         return callback(412);
 
@@ -30,7 +31,7 @@ exports.new = function(req, res) {
       date = req.body.date;
       time = req.body.time;
 
-  let sql = 'SELECT clubname FROM club_authority WHERE authId = ?';
+  let sql = 'SELECT clubname FROM club_authority WHERE authId = ?;';
   db.get().query(sql, userId, function(err, rows){
     if(err || !rows.length) return res.sendStatus(400);
 
@@ -62,7 +63,8 @@ exports.edit = function(req, res) {
 //------------------일정 삭제---------------------
 exports.delete = function(req, res) {
   let eventnum = req.params.eventnum;
-      sql = 'DELETE FROM club_event WHERE eventnum = ?';
+      sql = 'DELETE FROM club_event WHERE eventnum = ?;';
+
   db.get().query(sql, eventnum, function(err, result){
     if(err) return res.sendStatus(400);
     res.sendStatus(201);

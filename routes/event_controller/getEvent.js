@@ -14,6 +14,7 @@ exports.list = function(req, res){
   let date = req.params.date;
   const pattern = /^(20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
 
+  //날짜 유효성 검사
   if(pattern.test(date)) {
     let sql = 'SELECT * FROM club_event WHERE date = ? ORDER BY time;';
     db.get().query(sql, date, function(err, rows){

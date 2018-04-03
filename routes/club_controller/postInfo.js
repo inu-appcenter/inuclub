@@ -12,6 +12,7 @@ exports.info = function(req, res){
       application = req.body.application;
       contents = req.body.contents;
 
+  // 길이검사
   let updateArray = [representative, phone,
                       application, contents, clubnum];
   const limited_Length = [5, 13, 255, 1000];
@@ -46,18 +47,18 @@ exports.image = function(req, res){
               if (err.code === 'LIMIT_FILE_SIZE') // limits 설정보다 큰 파일
                 return res.sendStatus(462);
               else
-                callback('Error occurred');
+                callback('Error occurred'); //그 외 에러
           }
-          else if (req.validateErr)
+          else if (req.validateErr) // mimetype가 image가 아님
             return res.sendStatus(464);
-          else if(!req.file)
+          else if(!req.file)  // 아무것도 보내지 않은 경우
             return res.sendStatus(463);
           else
             callback(null, req.file.filename);
         });
       },
-      function(upload_Img, callback) {        // 2. 기존 이미지 검사 및 db에 업로드이미지 갱신
-        let sql = 'SELECT image' + seq + ' FROM club_info WHERE num = ?';
+      function(upload_Img, callback) {        // 2. 기존 이미지 select 및 db에 업로드이미지 갱신
+        let sql = 'SELECT image' + seq + ' FROM club_info WHERE num = ?;';
 
         db.get().query(sql, clubnum, function(err, rows){
           if(err) {                           //에러 발생시 업로드 파일 제거
@@ -66,7 +67,7 @@ exports.image = function(req, res){
             });
           } else {
             let privious_img = rows[0]['image'+seq];          //기존 이미지 이름
-            let sql = 'UPDATE club_info SET image' + seq + ' = ? WHERE num = ?';
+            let sql = 'UPDATE club_info SET image' + seq + ' = ? WHERE num = ?;';
 
             db.get().query(sql, [upload_Img, clubnum], function(err, result){
               if(err) {                       //에러 발생시 업로드 파일 제거
