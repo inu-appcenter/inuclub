@@ -5,7 +5,7 @@ module.exports = {
         script    : 'index.js',
         watch     : true,
         ignore_watch : ["log", "public"],
-        exec_mode : "cluster",
+        exec_mode : "fork",
         instances : 0
       }
   };
