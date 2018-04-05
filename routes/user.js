@@ -1,6 +1,7 @@
 module.exports = function(){
   const route = require('express').Router();
   const db = require('../config/db');
+  const log = require('../config/log');
 
 //------------------login------------------
   route.post('/login', function(req, res){
@@ -9,7 +10,10 @@ module.exports = function(){
     
     let sql = 'SELECT * FROM club_authority WHERE authId = ?;';
     db.get().query(sql, [userId, userpw], function(err, rows){
-      if(err) res.sendStatus(460);
+      if(err) {
+        log.logger().warn('로그인 err : ' + err);
+        res.sendStatus(460);
+      }
       else if(rows.length > 0 && userpw == rows[0].password){
         req.session.userId = userId;
         res.status(201).send('' + rows[0].num);

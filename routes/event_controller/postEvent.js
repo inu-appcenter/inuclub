@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const log = require('../../config/log');
 
 function updateEvent(sql, eventArray, callback) {
   const limited_Length = [15, 15];
@@ -39,6 +40,7 @@ exports.new = function(req, res) {
         sql = 'INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, ?);';
 
     updateEvent(sql, newEventArray, function(statusCode){
+      log.logger().info(req.session.userId + ' (' + statusCode + ') 일정등록 : ' + eventname);
       res.sendStatus(statusCode);
     });
   });
@@ -56,6 +58,7 @@ exports.edit = function(req, res) {
       sql = 'UPDATE club_event SET eventname = ?, location = ?, date = ?, time = ? WHERE eventnum = ?';
 
       updateEvent(sql, editEventArray, function(statusCode){
+        log.logger().info(req.session.userId + ' (' + statusCode + ') 일정수정 : ' + eventnum);
         res.sendStatus(statusCode);
       });
 };
@@ -67,6 +70,8 @@ exports.delete = function(req, res) {
 
   db.get().query(sql, eventnum, function(err, result){
     if(err) return res.sendStatus(400);
+    
+    log.logger().info(req.session.userId + ' 일정삭제 : ' + eventnum);
     res.sendStatus(201);
   });
 };
