@@ -15,4 +15,4 @@
 ---
 # Contact
 * [인천대학교 앱센터 페이스북](https://www.facebook.com/INUAppCenter/ "인천대학교 앱센터")
-* [카카오톡 오픈채팅] '인천대학교 앱센터'
+* [카카오톡 옐로우 아이디] 'inuappcenter'

@@ -1,5 +1,6 @@
 module.exports = function(){
   const express = require('express');
+  const timeout = require('connect-timeout');
   const path = require('path');
   const favicon = require('serve-favicon');
   const ejs = require('ejs');
@@ -8,14 +9,17 @@ module.exports = function(){
   const db = require('./db');
   const helmet = require('helmet');
   const morgan = require('morgan');
+
+  const log = require('./log');
   const key = require('../key.json');
   const app = express();
 
-  const log = require('./log');
   process.on('uncaughtException', function (err) {
     log.logger().error(err);
     console.log('Caught exception: ' + err);
   });
+
+  app.use(timeout('5s'));
 
   //  public/폴더명 생성하기
   app.use('/club_img', express.static(path.join(__dirname, '../public/club_img')));
@@ -35,7 +39,7 @@ module.exports = function(){
 
   db.connect(function(err){
     if(err){
-      log.logger().warn(err);
+      log.logger().error('Unable to connect to DB: ' + err);
       console.log('Unable to connect to DB.');
       process.exit(1);
     }

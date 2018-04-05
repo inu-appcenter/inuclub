@@ -1,15 +1,6 @@
 const app = require('./config/express')();
 const log = require('./config/log');
 const key = require('./key.json');
-//if 마스터클러스터
-/*
-else {
-  미들웨어 타임아웃 시작
-  미들웨어
-  404
-  에러미들웨어
-}
-*/
 
 app.use('/main', require('./routes/main')());
 app.use('/club', require('./routes/club')());
@@ -23,7 +14,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-  log.logger().warn(err);
+  log.logger().warn('Error handler: ' + req.originalUrl + ', ' + err);
   res.sendStatus(err.status || 500);
 });
 
