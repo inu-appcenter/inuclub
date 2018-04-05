@@ -46,7 +46,7 @@ module.exports = function(){
   });
 
   app.use(helmet());
-  app.use(morgan('short'));
+  app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :response-time ms "\\n:user-agent"'));
 
   return app;
 };
