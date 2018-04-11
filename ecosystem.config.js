@@ -4,7 +4,7 @@ module.exports = {
         name      : 'inuclub',
         script    : 'index.js',
         watch     : true,
-        ignore_watch : ["log", "public", "node_modules"],
+        ignore_watch : ["log", "public", ".git"],
         exec_mode : "fork",
         instances : 1
       }
