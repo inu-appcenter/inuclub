@@ -3,8 +3,8 @@ module.exports = {
       {
         name      : 'inuclub',
         script    : 'index.js',
-        watch     : true,
-        ignore_watch : ["log", "public", ".git"],
+        watch     : false,
+        // ignore_watch : ["log", "public"],
         exec_mode : "fork",
         instances : 1
       }
