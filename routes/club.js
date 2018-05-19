@@ -1,17 +1,15 @@
-module.exports = function(){
-  const route = require('express').Router();
-  const util = require('../config/util');
-  const getInfo = require('./club_controller/getInfo');
-  const postInfo = require('./club_controller/postInfo');
+const route = require('express').Router();
+const util = require('../config/util');
+const getInfo = require('./club_controller/getInfo');
+const postInfo = require('./club_controller/postInfo');
 
-  route.get('/', getInfo.total);
-  route.get('/category/:type', getInfo.category);       //해당 카테고리 동아리 목록
-  route.get('/search', getInfo.search);                 //동아리 검색
-  route.get('/info/:clubnum', getInfo.info);            //해당 동아리 info
-  route.get('/event/:clubnum', getInfo.event);          //해당 동아리 일정 목록
+route.get('/', getInfo.total);
+route.get('/category/:type', getInfo.category);       //해당 카테고리 동아리 목록
+route.get('/search', getInfo.search);                 //동아리 검색
+route.get('/info/:clubnum', getInfo.info);            //해당 동아리 info
+route.get('/event/:clubnum', getInfo.event);          //해당 동아리 일정 목록
 
-  route.post('/info/:clubnum', util.checkPermission, postInfo.info);                      //동아리 소개 수정
-  route.post('/image/:clubnum/:seq', util.checkPermission, postInfo.image);              //동아리 사진 수정
+route.post('/info/:clubnum', util.checkPermission, postInfo.info);                      //동아리 소개 수정
+route.post('/image/:clubnum/:seq', util.checkPermission, postInfo.image);              //동아리 사진 수정
 
-  return route;
-};
+module.exports = route;

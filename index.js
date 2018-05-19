@@ -11,9 +11,9 @@ if (cluster.isMaster) {
 	}
 
 	cluster.on('exit', function(deadWorker, code, signal) {
-		let worker = cluster.fork();
+    let worker = cluster.fork();
 		    newPID = worker.process.pid;
-        oldPID = deadWorker.process.pid;
+		    oldPID = deadWorker.process.pid;
 
     log.logger().error('worker '+oldPID+' died.');
     log.logger().error('error','worker '+newPID+' born.');
@@ -21,10 +21,10 @@ if (cluster.isMaster) {
 
 } else {  
 
-  app.use('/main', require('./routes/main')());
-  app.use('/club', require('./routes/club')());
-  app.use('/event', require('./routes/event')());
-  app.use('/user', require('./routes/user')());
+  app.use('/main', require('./routes/main'));
+  app.use('/club', require('./routes/club'));
+  app.use('/event', require('./routes/event'));
+  app.use('/user', require('./routes/user'));
 
   app.use(function(req, res, next) {
     let err = new Error('Not Found');
