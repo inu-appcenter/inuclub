@@ -4,7 +4,10 @@ const db = require('../../config/db');
 exports.total = function(req, res){
   let sql = 'SELECT * FROM club_event ORDER BY date;';
   db.get().query(sql, function(err, rows){
-    if(err) return res.sendStatus(400);
+    if(err) {
+      log.logger().warn('전체 일정목록 db err: ' + err);
+      return res.sendStatus(400);
+    }
     res.status(200).json(rows);
   });
 };
@@ -18,7 +21,10 @@ exports.list = function(req, res){
   if(pattern.test(date)) {
     let sql = 'SELECT * FROM club_event WHERE date = ? ORDER BY time;';
     db.get().query(sql, date, function(err, rows){
-      if(err) return res.sendStatus(400);
+      if(err) {
+        log.logger().warn(req.originalUrl + ' 해당 일정목록 db err: ' + err);
+        return res.sendStatus(400);
+      }
       res.status(200).json(rows);
     });
   } else {

@@ -13,14 +13,17 @@ exports.info = function(req, res){
       application = req.body.application;
       contents = req.body.contents;
 
+  log.logger().info(req.originalUrl + ' / user: ' + req.session.userId + ' 동아리 수정 access');
   // 길이검사
   let updateArray = [representative, phone,
                       application, contents, clubnum];
   const limited_Length = [5, 13, 255, 1000];
 
   for(let i = 0; i < updateArray.length - 1; i++){
-    if(updateArray[i] && updateArray[i].length > limited_Length[i])
+    if(updateArray[i] && updateArray[i].length > limited_Length[i]){
+      log.logger().info('user: ' + req.session.userId + ' 동아리 수정 실패');
       return res.sendStatus(412);
+    } 
   }
 
   let sql = `UPDATE club_info
@@ -29,10 +32,10 @@ exports.info = function(req, res){
 
   db.get().query(sql, updateArray, function(err, result){
     if(err) {
-      log.logger().warn(req.session.userId + '동아리 수정 실패  : ' + err);
+      log.logger().warn('user: ' + req.session.userId + ' 동아리 수정 db err: ' + err);
       return res.sendStatus(400);
     }
-    log.logger().info(req.session.userId + '동아리 수정 성공');
+    log.logger().info('user: ' + req.session.userId + '동아리 수정 성공');
     res.sendStatus(201);
   });
 };
@@ -43,7 +46,7 @@ exports.image = function(req, res){
   let clubnum = req.params.clubnum;
   let seq = req.params.seq;
 
-  log.logger().info(req.session.userId + ', ' + seq + '번 사진 수정 access');
+  log.logger().info(req.originalUrl + ' / user: ' +  req.session.userId + ', ' + seq + '번 사진 수정 access');
 
   async.waterfall([
       function(callback) {                  // 1. 파일 수신
@@ -60,8 +63,10 @@ exports.image = function(req, res){
             return res.sendStatus(464);
           else if(!req.file)  // 아무것도 보내지 않은 경우
             return res.sendStatus(463);
-          else
+          else {
+            log.logger().info('user: ' +  req.session.userId + ', ' + seq + '번 사진 업로드 수정 시작');
             callback(null, req.file.filename);
+          }
         });
       },
       function(upload_Img, callback) {        // 2. 기존 이미지 select 및 db에 업로드이미지 갱신
@@ -69,6 +74,7 @@ exports.image = function(req, res){
 
         db.get().query(sql, clubnum, function(err, rows){
           if(err) {                           //에러 발생시 업로드 파일 제거
+            log.logger().warn('user: ' +  req.session.userId + ' 동아리 사진 수정 db err1');
             upload.deleteFile('club_img', upload_Img, function(){
               callback(err);
             });
@@ -78,6 +84,7 @@ exports.image = function(req, res){
 
             db.get().query(sql, [upload_Img, clubnum], function(err, result){
               if(err) {                       //에러 발생시 업로드 파일 제거
+                log.logger().warn('user: ' +  req.session.userId + ' 동아리 사진 수정 db err2');
                 upload.deleteFile('club_img', upload_Img, function(){
                   callback(err);
                 });
@@ -97,10 +104,10 @@ exports.image = function(req, res){
       }
   ], function (err) {
       if( err ) {
-        log.logger().warn(req.session.userId + ', ' + seq + '번 사진 업로드 실패 ' + err);
+        log.logger().warn('user: ' +  req.session.userId + ', ' + seq + '번 사진 업로드 실패 ' + err);
         return res.sendStatus(461);
       }
-      log.logger().info(req.session.userId + ', ' + seq + '번 사진 업로드 성공');
+      log.logger().info('user: ' +  req.session.userId + ', ' + seq + '번 사진 업로드 성공');
       res.sendStatus(201);
   });
 };

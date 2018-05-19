@@ -27,7 +27,10 @@ exports.total = function(req, res){
               ON auth.num = info.num;`;
 
   db.get().query(sql, function(err, rows){
-    if(err) return res.sendStatus(400);
+    if(err) {
+      log.logger().warn('동아리 전체목록 db err: ' + err);
+      return res.sendStatus(400);
+    }
     for(let i = 0; i < rows.length; i++){
       for(let j = 1; j <= NUMBER_OF_IMAGES; j++){
         if(rows[i]['image' + j])
@@ -49,7 +52,10 @@ exports.category = function(req, res){
               WHERE info.category = ?;`;
 
   db.get().query(sql, category, function(err, rows){
-    if(err) return res.sendStatus(400);
+    if(err) {
+      log.logger().warn(req.originalUrl + ' 카테고리 목록 db err: ' + err);
+      return res.sendStatus(400);
+    }
     list_img(rows, function(result){
       res.status(200).json(result);
     });
@@ -70,7 +76,10 @@ exports.search = function(req, res){
               WHERE auth.clubname LIKE ? OR info.category LIKE ? OR info.contents LIKE ?;`;
 
   db.get().query(sql, [terms, terms, terms], function(err, rows){
-    if(err) return res.sendStatus(400);
+    if(err) {
+      log.logger().warn(req.originalUrl + ' 검색 db err: ' + err);
+      return res.sendStatus(400);
+    }
     list_img(rows, function(result){
       res.status(200).json(result);
     });
@@ -89,7 +98,10 @@ exports.info = function(req, res){
               WHERE auth.num = ?;`;
 
   db.get().query(sql, num, function(err, rows){
-    if(err || !rows.length) return res.sendStatus(400);
+    if(err || !rows.length) {
+      log.logger().warn(num + '번 동아리 info db err: ' + err + ' / rows.length: ' + rows.length);
+      return res.sendStatus(400);
+    }
     page_img(rows, function(result){
       res.status(200).json(result);
     });
@@ -101,11 +113,17 @@ exports.event = function(req, res) {
   let clubnum = req.params.clubnum;
       sql = 'SELECT clubname FROM club_authority WHERE num = ?;';
   db.get().query(sql, clubnum, function(err, rows){
-    if(err || !rows.length) return res.sendStatus(400);
+    if(err || !rows.length) {
+      log.logger().warn(clubnum + '번 동아리 일정 db err 1: ' + err + ' / rows.length: ' + rows.length);
+      return res.sendStatus(400);
+    }
 
     sql = 'SELECT * FROM club_event WHERE clubname = ? ORDER BY date;';
     db.get().query(sql, rows[0].clubname, function(err, rows){
-      if(err) return res.sendStatus(400);
+      if(err) {
+        log.logger().warn(clubnum + '번 동아리 일정 db err 2: ' + err);
+        return res.sendStatus(400);
+      }
       res.status(200).json(rows);
     });
   });

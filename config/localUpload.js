@@ -35,7 +35,7 @@ exports.multerSetting = function(req, res){
 exports.deleteFile = function(location, filename, callback){
   fs.unlink(path.join(__dirname, '../public/') + location + '/' + filename, function(err){
     if(err)
-      log.logger().info('no image: ' + location + ', ' + filename + ', ' + err);
+      log.logger().warn('no image: ' + location + ', ' + filename + ', ' + err);
     callback();
   });
 };

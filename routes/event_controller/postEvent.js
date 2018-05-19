@@ -14,7 +14,10 @@ function updateEvent(sql, eventArray, callback) {
         return callback(412);
 
     db.get().query(sql, eventArray, function(err, result){
-      if(err) return callback(400);
+      if(err){
+        log.logger().warn(req.originalUrl + ' / user: ' +  req.session.userId + ' 일정등록/수정 db err 2: ' + err);
+        return callback(400);
+      }
       callback(201);
     });
   }
@@ -34,13 +37,16 @@ exports.new = function(req, res) {
 
   let sql = 'SELECT clubname FROM club_authority WHERE authId = ?;';
   db.get().query(sql, userId, function(err, rows){
-    if(err || !rows.length) return res.sendStatus(400);
+    if(err || !rows.length) {
+      log.logger().warn('user: ' +  req.session.userId + ' 일정등록 db err 1: ' + err);
+      return res.sendStatus(400);
+    }
 
     let newEventArray = [eventname, location, date, time, rows[0].clubname];
         sql = 'INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, ?);';
 
     updateEvent(sql, newEventArray, function(statusCode){
-      log.logger().info(req.session.userId + ' (' + statusCode + ') 일정등록 : ' + eventname);
+      log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정등록번호: ' + eventname);
       res.sendStatus(statusCode);
     });
   });
@@ -58,7 +64,7 @@ exports.edit = function(req, res) {
       sql = 'UPDATE club_event SET eventname = ?, location = ?, date = ?, time = ? WHERE eventnum = ?';
 
       updateEvent(sql, editEventArray, function(statusCode){
-        log.logger().info(req.session.userId + ' (' + statusCode + ') 일정수정 : ' + eventnum);
+        log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정수정번호 : ' + eventnum);
         res.sendStatus(statusCode);
       });
 };
@@ -69,9 +75,12 @@ exports.delete = function(req, res) {
       sql = 'DELETE FROM club_event WHERE eventnum = ?;';
 
   db.get().query(sql, eventnum, function(err, result){
-    if(err) return res.sendStatus(400);
+    if(err) {
+      log.logger().warn('user: ' +  req.session.userId + ' ' + eventnum + '번 일정삭제 db err: ' + err);
+      return res.sendStatus(400);
+    }
     
-    log.logger().info(req.session.userId + ' 일정삭제 : ' + eventnum);
+    log.logger().info('user: ' +  req.session.userId + ' ' + eventnum + '번 일정삭제');
     res.sendStatus(201);
   });
 };
