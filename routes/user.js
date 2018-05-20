@@ -27,7 +27,6 @@ route.post('/login', function(req, res){
 route.get('/logout', function (req, res) {
   req.session.destroy(function(err){
     if(err) return next(err);
-    req.session;
     res.sendStatus(200);
   });
 });

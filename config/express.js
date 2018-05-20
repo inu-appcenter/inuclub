@@ -3,11 +3,14 @@ module.exports = function(){
   const timeout = require('connect-timeout');
   const path = require('path');
   const favicon = require('serve-favicon');
-  //const ejs = require('ejs');
   const bodyParser = require('body-parser');
   const session = require('express-session');
+  const connectRedis = require('connect-redis');
+  const RedisStore = connectRedis(session);
   const db = require('./db');
   const helmet = require('helmet');
+  
+  //const ejs = require('ejs');
   //const morgan = require('morgan');
 
   const log = require('./log');
@@ -34,7 +37,18 @@ module.exports = function(){
   app.use(session({
     secret: key.secret,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      maxAge: 3600 * 1000
+    },
+    store: new RedisStore({
+      host: "127.0.0.1",
+      port: 6379,
+      prefix : "session:",
+      db : 0,
+      logErrors: false })
   }));
 
   db.connect(function(err){
