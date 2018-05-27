@@ -1,5 +1,6 @@
-const db = require('../../config/db');
 const arrayWrap = require("arraywrap");
+const db = require('../../config/db');
+const log = require('../../config/log');
 const NUMBER_OF_IMAGES = 4;
 
 const list_img = function(rows, callback){              //list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가

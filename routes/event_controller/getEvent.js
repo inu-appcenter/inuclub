@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const log = require('../../config/log');
 
 //---------------해당 날짜 일정 목록 ( temp )--------------- 이거 말고 달 단위로 날짜만....
 exports.total = function(req, res){
