@@ -19,7 +19,7 @@ exports.multerSetting = function(req, res){
   });
   return multer({
     storage: storage,
-    limits: { fileSize: 2097152 }, //형태는 byte이며 현재 2mb로 제한. callback 사용불가.
+    limits: { fileSize: 4194304 }, //형태는 byte이며 현재 4mb로 제한. callback 사용불가.
     fileFilter: function (req, file, callback) { // 파일 필터는 파일의 미메타입을 체크하는 옵션.
       if (file.mimetype.indexOf('image') === -1) { // 이미지만 가능.
         req.validateErr = 'otherType';

@@ -3,7 +3,7 @@ const arrayWrap = require("arraywrap");
 const NUMBER_OF_IMAGES = 4;
 
 const list_img = function(rows, callback){              //list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가
-  for(let i = 0; i < rows.length; i++){
+  for(let i = 0, len = rows.length; i < len; i++){
     if(rows[i].image1)
       rows[i].image1 = 'club_img/' + rows[i].image1;
   }

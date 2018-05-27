@@ -9,7 +9,7 @@ function updateEvent(sql, eventArray, callback) {
   //이벤트 이름, 날짜, 시간 유효성 검사
   if(eventArray[0] && datePattern.test(eventArray[2]) && timePattern.test(eventArray[3])){
 
-    for(let i = 0; i < eventArray.length - 3; i++)            //일정이름, 장소 길이 검사
+    for(let i = 0, len = eventArray.length - 3; i < len; i++)            //일정이름, 장소 길이 검사
       if(eventArray[i] && eventArray[i].length > limited_Length[i])
         return callback(412);
 
