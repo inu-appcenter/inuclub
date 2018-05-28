@@ -4,19 +4,19 @@ const numCPUs = require('os').cpus().length;
 const log = require('./config/log');
 const key = require('./key.json');
 
+function startWorker() {
+  var worker = cluster.fork();
+  log.logger().info('CLUSTER: Worker %d started', worker.process.pid);
+}
+
 if (cluster.isMaster) {
 	for (let i = 0; i < numCPUs; i++) {
-    let child = cluster.fork();
-    log.logger().info('worker '+child.process.pid+' born at init.');
+    startWorker();
 	}
 
 	cluster.on('exit', function(deadWorker, code, signal) {
-    let worker = cluster.fork();
-		    newPID = worker.process.pid;
-		    oldPID = deadWorker.process.pid;
-
-    log.logger().error('worker '+oldPID+' died.');
-    log.logger().error('error','worker '+newPID+' born.');
+    log.logger().error('CLUSTER: Worker %d died with exit code %d (%s)', deadWorker.process.pid, code, signal);
+    startWorker();
   });
 
 } else {  

@@ -10,7 +10,7 @@ route.post('/login', function(req, res){
   let sql = 'SELECT * FROM club_authority WHERE authId = ?;';
   db.get().query(sql, [userId, userpw], function(err, rows){
     if(err) {
-      log.logger().warn('user: ' +  req.session.userId + ' 로그인 err: ' + err);
+      log.logger().warn('user: ' + userId + ' 로그인 err: ' + err);
       res.sendStatus(460);
     }
     else if(rows.length > 0 && userpw === rows[0].password){
