@@ -5,7 +5,7 @@ const log = require('./config/log');
 const key = require('./key.json');
 
 function startWorker() {
-  var worker = cluster.fork();
+  let worker = cluster.fork();
   log.logger().info('CLUSTER: Worker %d started', worker.process.pid);
 }
 
