@@ -46,7 +46,7 @@ exports.new = function(req, res) {
         sql = 'INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, ?);';
 
     updateEvent(sql, newEventArray, function(statusCode){
-      log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정등록번호: ' + eventname);
+      log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정등록: ' + eventname);
       res.sendStatus(statusCode);
     });
   });
