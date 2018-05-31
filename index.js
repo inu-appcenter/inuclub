@@ -39,6 +39,6 @@ if (cluster.isMaster) {
 
   const port = key.port;
   app.listen(port, function(){
-    console.log('Sever On!');
+    console.log('Server On!');
   });
 }
