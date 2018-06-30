@@ -1,6 +1,9 @@
 logs/
 views/
-public/
 node_modules/
 routes/test.js
 key.json
+public/main_img/**
+!public/main_img/.gitkeep
+public/club_img/**
+!public/club_img/.gitkeep
