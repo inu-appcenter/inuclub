@@ -1,12 +1,12 @@
-const db = require('../../config/db');
-const log = require('../../config/log');
-
 //---------------해당 날짜 일정 목록 ( temp )--------------- 이거 말고 달 단위로 날짜만....
-exports.total = function(req, res){
-  let sql = 'SELECT * FROM club_event ORDER BY date;';
-  db.get().query(sql, function(err, rows){
+exports.total = (req, res) => {
+
+  const db = req.app.get('db');
+  let sql = 'SELECT * FROM club_event ORDER BY date';
+
+  db.query(sql, (err, rows) => {
     if(err) {
-      log.logger().warn('전체 일정목록 db err: ' + err);
+      console.log('getEvent.js err: [' + req.originalUrl + '] ' + err);
       return res.sendStatus(400);
     }
     res.status(200).json(rows);
@@ -14,20 +14,25 @@ exports.total = function(req, res){
 };
 
 //---------------해당 날짜 일정 목록---------------
-exports.list = function(req, res){
+exports.list = (req, res) => {
+
+  const db = req.app.get('db');
   let date = req.params.date;
-  const pattern = /^(20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+      pattern = /^(20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
 
   //날짜 유효성 검사
   if(pattern.test(date)) {
-    let sql = 'SELECT * FROM club_event WHERE date = ? ORDER BY time;';
-    db.get().query(sql, date, function(err, rows){
+
+    let sql = 'SELECT * FROM club_event WHERE date = ? ORDER BY time';
+
+    db.query(sql, date, (err, rows) => {
       if(err) {
-        log.logger().warn(req.originalUrl + ' 해당 일정목록 db err: ' + err);
+        console.log('getEvent.js err: [' + req.originalUrl + '] ' + err);
         return res.sendStatus(400);
       }
       res.status(200).json(rows);
     });
+    
   } else {
       res.sendStatus(465);
   }

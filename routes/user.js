@@ -1,21 +1,20 @@
 const route = require('express').Router();
-const db = require('../config/db');
-const log = require('../config/log');
 
 //------------------login------------------
-route.post('/login', function(req, res){
+route.post('/login', (req, res) => {
+  const db = req.app.get('db');
   let userId = req.body.id;
   let userpw = req.body.pw;
   
-  let sql = 'SELECT * FROM club_authority WHERE authId = ?;';
-  db.get().query(sql, [userId, userpw], function(err, rows){
-    if(err) {
-      log.logger().warn('user: ' + userId + ' 로그인 err: ' + err);
+  let sql = 'SELECT * FROM club_authority WHERE authId = ?';
+  db.query(sql, [userId, userpw], (err, rows) => {
+    if(err || !rows.length) {
+      console.log('user.js err : [' + userId + '] ' + err);
       res.sendStatus(460);
     }
-    else if(rows.length > 0 && userpw === rows[0].password){
+    else if(userpw === rows[0].password){
       req.session.userId = userId;
-      log.logger().info('user: ' +  req.session.userId + ' 로그인');
+      console.log('[' +  req.session.userId + '] 로그인');
       res.status(201).send('' + rows[0].num);
     } else {
       res.sendStatus(460);
@@ -24,8 +23,8 @@ route.post('/login', function(req, res){
 });
 
 //------------------logout------------------
-route.get('/logout', function (req, res) {
-  req.session.destroy(function(err){
+route.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
     if(err) return next(err);
     res.sendStatus(200);
   });

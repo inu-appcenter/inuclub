@@ -1,7 +1,6 @@
-log/
-routes/test.js
+logs/
 views/
-public/club_img/
-public/main_img/
+public/
 node_modules/
+routes/test.js
 key.json

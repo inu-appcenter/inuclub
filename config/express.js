@@ -1,41 +1,33 @@
-module.exports = function(){
+module.exports = () => {
   const express = require('express');
   const timeout = require('connect-timeout');
   const path = require('path');
-  const favicon = require('serve-favicon');
   const bodyParser = require('body-parser');
   const session = require('express-session');
   const connectRedis = require('connect-redis');
   const RedisStore = connectRedis(session);
   const db = require('./db');
   const helmet = require('helmet');
-  
-  //const ejs = require('ejs');
-  //const morgan = require('morgan');
-
-  const log = require('./log');
-  const key = require('../key.json');
   const app = express();
 
-  process.on('uncaughtException', function (err) {
-    log.logger().error(err);
+  const key = require('../key.json');
+  app.set('key', key);
+
+  process.on('uncaughtException', (err) => {
     console.log('Caught exception: ' + err);
   });
 
   app.use(timeout('5s'));
+  app.use(helmet());
 
-  //  public/폴더명 생성하기
   app.use('/club_img', express.static(path.join(__dirname, '../public/club_img')));
   app.use('/main_img', express.static(path.join(__dirname, '../public/main_img')));
-  app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
-  //app.set('view engine', 'ejs');
-  //app.set('views', path.join(__dirname,'../views'));
 
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
   app.use(session({
-    secret: key.secret,
+    secret: app.get('key').secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -51,16 +43,29 @@ module.exports = function(){
       logErrors: false })
   }));
 
-  db.connect(function(err){
+  db.connect(key, (err) => {
     if(err){
-      log.logger().error('Unable to connect to DB: ' + err);
       console.log('Unable to connect to DB.');
       process.exit(1);
     }
   });
 
-  app.use(helmet());
-  //app.use(morgan('[:date[clf]] ":method :url :status :response-time ms "\\n(user):user-agent"'));
+  app.set('db', db.get());
+
+  switch ( app.get('key').env ) {
+    case 'development':
+        // const ejs = require('ejs');
+        // app.set('view engine', 'ejs');
+        // app.set('views', path.join(__dirname,'../views'));
+        app.use(require('morgan')('dev'));
+        break;
+    case 'production':
+        /* production setting */
+        break;
+    default :
+        console.log('Development environment setup required');
+        break;
+  }
 
   return app;
 };

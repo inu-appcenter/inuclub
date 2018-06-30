@@ -1,7 +1,4 @@
-const db = require('../../config/db');
-const log = require('../../config/log');
-
-function updateEvent(sql, eventArray, callback) {
+let updateEvent = (db, sql, eventArray, callback) => {
   const limited_Length = [15, 15];
   const datePattern = /^(20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
   const timePattern = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -13,9 +10,9 @@ function updateEvent(sql, eventArray, callback) {
       if(eventArray[i] && eventArray[i].length > limited_Length[i])
         return callback(412);
 
-    db.get().query(sql, eventArray, function(err, result){
+    db.query(sql, eventArray, (err, result) => {
       if(err){
-        log.logger().warn(req.originalUrl + ' / user: ' +  req.session.userId + ' 일정등록/수정 db err 2: ' + err);
+        console.log('postEvent.js err1: [' +  req.session.userId + '] ' + err);
         return callback(400);
       }
       callback(201);
@@ -26,7 +23,8 @@ function updateEvent(sql, eventArray, callback) {
 }
 
 //------------------일정 등록---------------------
-exports.new = function(req, res) {
+exports.new = (req, res) => {
+  const db = req.app.get('db');
   let userId = req.session.userId;
   if(!userId) return res.sendStatus(401);
 
@@ -35,25 +33,19 @@ exports.new = function(req, res) {
       date = req.body.date;
       time = req.body.time;
 
-  let sql = 'SELECT clubname FROM club_authority WHERE authId = ?;';
-  db.get().query(sql, userId, function(err, rows){
-    if(err || !rows.length) {
-      log.logger().warn('user: ' +  req.session.userId + ' 일정등록 db err 1: ' + err);
-      return res.sendStatus(400);
-    }
+    let newEventArray = [eventname, location, date, time, userId];
+        sql = `INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, 
+              (SELECT clubname FROM club_authority WHERE authId = ?))`;
 
-    let newEventArray = [eventname, location, date, time, rows[0].clubname];
-        sql = 'INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, ?);';
-
-    updateEvent(sql, newEventArray, function(statusCode){
-      log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정등록: ' + eventname);
+    updateEvent(db, sql, newEventArray, (statusCode) => {
+      console.log('postEvent.js : [' +  req.session.userId + '] status:' + statusCode + ', 일정등록: ' + eventname);
       res.sendStatus(statusCode);
     });
-  });
 };
 
 //------------------일정 수정---------------------
-exports.edit = function(req, res) {
+exports.edit = (req, res) => {
+  const db = req.app.get('db');
   let eventnum = req.params.eventnum;
       eventname = req.body.eventname;
       location = req.body.location;
@@ -63,24 +55,25 @@ exports.edit = function(req, res) {
       editEventArray = [eventname, location, date, time, eventnum];
       sql = 'UPDATE club_event SET eventname = ?, location = ?, date = ?, time = ? WHERE eventnum = ?';
 
-      updateEvent(sql, editEventArray, function(statusCode){
-        log.logger().info('user: ' +  req.session.userId + ' status:' + statusCode + ' 일정수정번호 : ' + eventnum);
+      updateEvent(db, sql, editEventArray, (statusCode) => {
+        console.log('postEvent.js : [' +  req.session.userId + '] status:' + statusCode + ', 일정수정번호 : ' + eventnum);
         res.sendStatus(statusCode);
       });
 };
 
 //------------------일정 삭제---------------------
-exports.delete = function(req, res) {
+exports.delete = (req, res) => {
+  const db = req.app.get('db');
   let eventnum = req.params.eventnum;
-      sql = 'DELETE FROM club_event WHERE eventnum = ?;';
+      sql = 'DELETE FROM club_event WHERE eventnum = ?';
 
-  db.get().query(sql, eventnum, function(err, result){
+  db.query(sql, eventnum, (err, result) => {
     if(err) {
-      log.logger().warn('user: ' +  req.session.userId + ' ' + eventnum + '번 일정삭제 db err: ' + err);
+      console.log('postEvent.js err2 : [' +  req.session.userId + '] ' + eventnum + '번 일정 ' + err);
       return res.sendStatus(400);
     }
     
-    log.logger().info('user: ' +  req.session.userId + ' ' + eventnum + '번 일정삭제');
+    console.log('postEvent.js : [' +  req.session.userId + '] ' + eventnum + '번 일정삭제');
     res.sendStatus(201);
   });
 };
