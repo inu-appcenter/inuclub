@@ -63,6 +63,7 @@ module.exports = () => {
         /* production setting */
         break;
     default :
+        app.use(require('morgan')('dev'));
         console.log('Development environment setup required');
         break;
   }

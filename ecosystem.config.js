@@ -13,5 +13,3 @@ module.exports = {
         out_file : "./logs/out.log"
       }
   };
-
-  //ignore_watch : log x
