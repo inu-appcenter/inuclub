@@ -10,7 +10,7 @@ let startWorker = () => {
   console.log('CLUSTER: Worker %d started', worker.process.pid);
 }
 
-for (let i = 0; i < /*numCPUs*/ 1; i++) {  //워커 개수 늘리려면 주석풀기
+for (let i = 0; i < /*numCPUs*/ 1; i++) {  //워커 개수 늘리려면 주석 풀기
   startWorker();
 }
 
