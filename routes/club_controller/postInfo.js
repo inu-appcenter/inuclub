@@ -7,10 +7,10 @@ const upload = require('../../config/localUpload');
 exports.info = (req, res) => {
   const db = req.app.get('db');
   let clubnum = req.params.clubnum;
-      representative = req.body.representative;
-      phone = req.body.phone;
-      application = req.body.application;
-      contents = req.body.contents;
+      representative = req.body.representative || '';
+      phone = req.body.phone || '';
+      application = req.body.application || '';
+      contents = req.body.contents || '';
 
   // 길이검사
   let updateArray = [representative, phone,

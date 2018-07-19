@@ -29,7 +29,7 @@ exports.new = (req, res) => {
   if(!userId) return res.sendStatus(401);
 
   let eventname = req.body.eventname;
-      location = req.body.location;
+      location = req.body.location || '';
       date = req.body.date;
       time = req.body.time;
 
