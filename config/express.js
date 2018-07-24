@@ -36,8 +36,8 @@ module.exports = () => {
       maxAge: 3600 * 1000
     },
     store: new RedisStore({
-      host: "127.0.0.1",
-      port: 6379,
+      host: app.get('key').host,
+      port: app.get('key').redisPort,
       prefix : "session:",
       db : 0,
       logErrors: false })
