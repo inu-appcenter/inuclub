@@ -38,13 +38,14 @@ module.exports = () => {
     store: new RedisStore({
       host: app.get('key').host,
       port: app.get('key').redisPort,
-      prefix : "session:",
-      db : 0,
-      logErrors: false })
+      prefix: "session:",
+      db: 0,
+      logErrors: false
+    })
   }));
 
   db.connect(key, (err) => {
-    if(err){
+    if (err) {
       console.log('Unable to connect to DB.');
       process.exit(1);
     }
@@ -52,20 +53,20 @@ module.exports = () => {
 
   app.set('db', db.get());
 
-  switch ( app.get('key').env ) {
+  switch (app.get('key').env) {
     case 'development':
-        // const ejs = require('ejs');
-        // app.set('view engine', 'ejs');
-        // app.set('views', path.join(__dirname,'../views'));
-        app.use(require('morgan')('dev'));
-        break;
+      // const ejs = require('ejs');
+      // app.set('view engine', 'ejs');
+      // app.set('views', path.join(__dirname,'../views'));
+      app.use(require('morgan')('dev'));
+      break;
     case 'production':
-        /* production setting */
-        break;
-    default :
-        app.use(require('morgan')('dev'));
-        console.log('Development environment setup required');
-        break;
+      /* production setting */
+      break;
+    default:
+      app.use(require('morgan')('dev'));
+      console.log('Development environment setup required');
+      break;
   }
 
   return app;

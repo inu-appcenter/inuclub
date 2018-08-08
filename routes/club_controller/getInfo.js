@@ -1,20 +1,22 @@
 const arrayWrap = require("arraywrap");
 const NUMBER_OF_IMAGES = 4;
 
-let list_img = (rows, callback) => {              //list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가
+//list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가
+let list_img = (rows, callback) => { 
 
-  for(let i = 0, len = rows.length; i < len; i++){
-    if(rows[i].image1)
+  for (let i = 0, len = rows.length; i < len; i++) {
+    if (rows[i].image1)
       rows[i].image1 = 'club_img/' + rows[i].image1;
   }
 
   callback(rows);
 };
 
-const page_img = (rows, callback) => {              //page 사진 접근경로 수정 : 사진파일 존재시 파일명 앞에 정적루트 추가
+//page 사진 접근경로 수정 : 사진파일 존재시 파일명 앞에 정적루트 추가
+const page_img = (rows, callback) => { 
 
-  for(let i = 1; i <= NUMBER_OF_IMAGES; i++){
-    if(rows[0]['image' + i])
+  for (let i = 1; i <= NUMBER_OF_IMAGES; i++) {
+    if (rows[0]['image' + i])
       rows[0]['image' + i] = 'club_img/' + rows[0]['image' + i];
   }
 
@@ -31,17 +33,19 @@ exports.total = (req, res) => {
               ON auth.num = info.num;`;
 
   db.query(sql, (err, rows) => {
-    if(err) {
+
+    if (err) {
       console.log('getInfo.js err1 : ' + err);
       return res.sendStatus(400);
     }
 
-    for(let i = 0; i < rows.length; i++){
-      for(let j = 1; j <= NUMBER_OF_IMAGES; j++){
-        if(rows[i]['image' + j])
+    for (let i = 0; i < rows.length; i++) {
+      for (let j = 1; j <= NUMBER_OF_IMAGES; j++) {
+        if (rows[i]['image' + j])
           rows[i]['image' + j] = 'club_img/' + rows[i]['image' + j];
       }
     }
+
     res.status(200).json(rows);
   });
 };
@@ -58,13 +62,16 @@ exports.category = (req, res) => {
               WHERE info.category = ?;`;
 
   db.query(sql, category, (err, rows) => {
-    if(err) {
+
+    if (err) {
       console.log('getInfo.js err2 : ' + err);
       return res.sendStatus(400);
     }
+
     list_img(rows, (result) => {
       res.status(200).json(result);
     });
+
   });
 };
 
@@ -72,7 +79,7 @@ exports.category = (req, res) => {
 exports.search = (req, res) => {
   const db = req.app.get('db');
   let keyword = arrayWrap(req.query.keyword || ''),
-      terms = keyword[0].split('+');
+    terms = keyword[0].split('+');
   terms = '%' + terms + '%';
 
   // 동아리 이름, 카테고리, 내용 검색
@@ -83,13 +90,16 @@ exports.search = (req, res) => {
               WHERE auth.clubname LIKE ? OR info.category LIKE ? OR info.contents LIKE ?;`;
 
   db.query(sql, [terms, terms, terms], (err, rows) => {
-    if(err) {
+
+    if (err) {
       console.log('getInfo.js err3 : ' + err);
       return res.sendStatus(400);
     }
+    
     list_img(rows, (result) => {
       res.status(200).json(result);
     });
+
   });
 };
 
@@ -106,13 +116,16 @@ exports.info = (req, res) => {
               WHERE auth.num = ?;`;
 
   db.query(sql, num, (err, rows) => {
-    if(err || !rows.length) {
+
+    if (err || !rows.length) {
       console.log('getInfo.js err4 : ' + err + ', rows.length : ' + rows.length);
       return res.sendStatus(400);
     }
+    
     page_img(rows, (result) => {
       res.status(200).json(result);
     });
+
   });
 };
 
@@ -120,21 +133,25 @@ exports.info = (req, res) => {
 exports.event = (req, res) => {
   const db = req.app.get('db');
   let clubnum = req.params.clubnum,
-      sql = 'SELECT clubname FROM club_authority WHERE num = ?';
+    sql = 'SELECT clubname FROM club_authority WHERE num = ?';
 
   db.query(sql, clubnum, (err, rows) => {
-    if(err || !rows.length) {
+
+    if (err || !rows.length) {
       console.log('getInfo.js err5 : ' + err + ' / rows.length: ' + rows.length);
       return res.sendStatus(400);
     }
 
     sql = 'SELECT * FROM club_event WHERE clubname = ? ORDER BY date';
+
     db.query(sql, rows[0].clubname, (err, rows) => {
-      if(err) {
+
+      if (err) {
         console.log('getInfo.js err6 : ' + err);
         return res.sendStatus(400);
       }
       res.status(200).json(rows);
+      
     });
   });
 };

@@ -5,7 +5,7 @@ app.use('/club', require('./routes/club'));
 app.use('/event', require('./routes/event'));
 app.use('/user', require('./routes/user'));
 
-if(app.get('key').env === 'development'){
+if (app.get('key').env === 'development') {
     app.use('/test', require('./routes/test')());
 }
 

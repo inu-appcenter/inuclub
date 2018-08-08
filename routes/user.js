@@ -5,17 +5,21 @@ route.post('/login', (req, res) => {
   const db = req.app.get('db');
   let userId = req.body.id;
   let userpw = req.body.pw;
-  
+
   let sql = 'SELECT * FROM club_authority WHERE authId = ?';
   db.query(sql, [userId, userpw], (err, rows) => {
-    if(err || !rows.length) {
+
+    if (err || !rows.length) {
+
       console.log('user.js err : [' + userId + '] ' + err);
       res.sendStatus(460);
-    }
-    else if(userpw === rows[0].password){
+
+    } else if (userpw === rows[0].password) {
+      
       req.session.userId = userId;
-      console.log('[' +  req.session.userId + '] 로그인');
+      console.log('[' + req.session.userId + '] 로그인');
       res.status(201).send('' + rows[0].num);
+
     } else {
       res.sendStatus(460);
     }
@@ -25,7 +29,7 @@ route.post('/login', (req, res) => {
 //------------------logout------------------
 route.get('/logout', (req, res) => {
   req.session.destroy((err) => {
-    if(err) return next(err);
+    if (err) return next(err);
     res.sendStatus(200);
   });
 });
