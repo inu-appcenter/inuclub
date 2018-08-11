@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.log('Error handler : [' + req.originalUrl + '] ' + err);
+    console.log(`Error handler: ${req.originalUrl} ${err}`);
     res.sendStatus(err.status || 500);
 });
 

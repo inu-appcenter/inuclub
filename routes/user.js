@@ -7,11 +7,11 @@ route.post('/login', (req, res) => {
       userpw = req.body.pw;
 
   let sql = 'SELECT * FROM club_authority WHERE authId = ?';
-  db.query(sql, [userId, userpw], (err, rows) => {
+  db.query(sql, userId, (err, rows) => {
 
     if (err || !rows.length) {
 
-      console.log(`user.js err : ${userId} err=${err}`);
+      console.log(`user.js err : id=${userId} err=${err}`);
       res.sendStatus(460);
 
     } else if (userpw === rows[0].password) {

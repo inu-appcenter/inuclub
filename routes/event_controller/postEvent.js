@@ -42,7 +42,7 @@ exports.new = (req, res) => {
               (SELECT clubname FROM club_authority WHERE authId = ?))`;
 
   updateEvent(db, sql, newEventArray, (statusCode) => {
-    console.log(`postEvent.js : ${userId} 일정등록=${eventname} status=${statusCode}`);
+    console.log(`postEvent.js : id=${userId} 일정등록=${eventname} status=${statusCode}`);
     res.sendStatus(statusCode);
   });
 };
@@ -60,7 +60,7 @@ exports.edit = (req, res) => {
   sql = 'UPDATE club_event SET eventname = ?, location = ?, date = ?, time = ? WHERE eventnum = ?';
 
   updateEvent(db, sql, editEventArray, (statusCode) => {
-    console.log(`postEvent.js : ${req.session.userId} 일정수정=${eventnum} status=${statusCode}`);
+    console.log(`postEvent.js : id=${req.session.userId} 일정수정=${eventnum} status=${statusCode}`);
     res.sendStatus(statusCode);
   });
 };
@@ -74,11 +74,11 @@ exports.delete = (req, res) => {
   db.query(sql, eventnum, (err, result) => {
 
     if (err) {
-      console.log(`postEvent.js err2 : ${userId} eventnum=${eventnum} err=${err}`);
+      console.log(`postEvent.js err2 : id=${userId} eventnum=${eventnum} err=${err}`);
       return res.sendStatus(400);
     }
 
-    console.log(`postEvent.js : ${req.session.userId} eventnum=${eventnum} 삭제`);
+    console.log(`postEvent.js : id=${req.session.userId} eventnum=${eventnum} 삭제`);
     res.sendStatus(201);
     
   });

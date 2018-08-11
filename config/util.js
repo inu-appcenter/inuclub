@@ -24,7 +24,7 @@ exports.checkPermission = (req, res, next) => {
   } else if (eventnum) { //행사 관련 수정,삭제 루트 접근 : 이벤트번호(eventnum)와 세션id 검사 
     let sql = 'select authId from club_authority where clubname = (select clubname from club_event where eventnum = ?)';
 
-    db.query(sql, [eventnum, userId], (err, rows) => {
+    db.query(sql, eventnum, (err, rows) => {
       if (err || !rows.length) {
         console.log(`util.js err2 : userId=${userId} / eventnum=${eventnum} / rows=${rows} / err=${err}`);
         res.sendStatus(400);
