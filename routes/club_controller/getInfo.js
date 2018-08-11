@@ -1,12 +1,13 @@
 const arrayWrap = require("arraywrap");
 const NUMBER_OF_IMAGES = 4;
+const CLUB_IMG_ROUTE = 'club_img/';
 
 //list 사진 접근경로 수정 : 동아리들 첫 사진파일 이름 앞에 정적루트 추가
 let list_img = (rows, callback) => { 
 
   for (let i = 0, len = rows.length; i < len; i++) {
     if (rows[i].image1)
-      rows[i].image1 = 'club_img/' + rows[i].image1;
+      rows[i].image1 = CLUB_IMG_ROUTE + rows[i].image1;
   }
 
   callback(rows);
@@ -17,7 +18,7 @@ const page_img = (rows, callback) => {
 
   for (let i = 1; i <= NUMBER_OF_IMAGES; i++) {
     if (rows[0]['image' + i])
-      rows[0]['image' + i] = 'club_img/' + rows[0]['image' + i];
+      rows[0]['image' + i] = CLUB_IMG_ROUTE + rows[0]['image' + i];
   }
 
   delete rows[0].category;
@@ -35,14 +36,14 @@ exports.total = (req, res) => {
   db.query(sql, (err, rows) => {
 
     if (err) {
-      console.log('getInfo.js err1 : ' + err);
+      console.log(`getInfo.js err1 : ${err}`);
       return res.sendStatus(400);
     }
 
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 0, len = rows.length; i < len; i++) {
       for (let j = 1; j <= NUMBER_OF_IMAGES; j++) {
         if (rows[i]['image' + j])
-          rows[i]['image' + j] = 'club_img/' + rows[i]['image' + j];
+          rows[i]['image' + j] = CLUB_IMG_ROUTE + rows[i]['image' + j];
       }
     }
 
@@ -64,7 +65,7 @@ exports.category = (req, res) => {
   db.query(sql, category, (err, rows) => {
 
     if (err) {
-      console.log('getInfo.js err2 : ' + err);
+      console.log(`getInfo.js err2 : ${err}`);
       return res.sendStatus(400);
     }
 
@@ -92,7 +93,7 @@ exports.search = (req, res) => {
   db.query(sql, [terms, terms, terms], (err, rows) => {
 
     if (err) {
-      console.log('getInfo.js err3 : ' + err);
+      console.log(`getInfo.js err3 : ${err}`);
       return res.sendStatus(400);
     }
     
@@ -118,7 +119,7 @@ exports.info = (req, res) => {
   db.query(sql, num, (err, rows) => {
 
     if (err || !rows.length) {
-      console.log('getInfo.js err4 : ' + err + ', rows.length : ' + rows.length);
+      console.log(`getInfo.js err4 : rows=${rows} err=${err}`);
       return res.sendStatus(400);
     }
     
@@ -138,7 +139,7 @@ exports.event = (req, res) => {
   db.query(sql, clubnum, (err, rows) => {
 
     if (err || !rows.length) {
-      console.log('getInfo.js err5 : ' + err + ' / rows.length: ' + rows.length);
+      console.log(`getInfo.js err5 : rows=${rows} err=${err}`);
       return res.sendStatus(400);
     }
 
@@ -147,7 +148,7 @@ exports.event = (req, res) => {
     db.query(sql, rows[0].clubname, (err, rows) => {
 
       if (err) {
-        console.log('getInfo.js err6 : ' + err);
+        console.log(`getInfo.js err6 : ${err}`);
         return res.sendStatus(400);
       }
       res.status(200).json(rows);

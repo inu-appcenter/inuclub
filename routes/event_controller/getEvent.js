@@ -1,4 +1,4 @@
-//---------------해당 날짜 일정 목록 ( temp )--------------- 이거 말고 달 단위로 날짜만....
+//---------------해당 날짜 일정 목록 ( temp )--------------- 이거 말고 달 단위로 날짜만
 exports.total = (req, res) => {
 
   const db = req.app.get('db');
@@ -7,7 +7,7 @@ exports.total = (req, res) => {
   db.query(sql, (err, rows) => {
 
     if (err) {
-      console.log('getEvent.js err: [' + req.originalUrl + '] ' + err);
+      console.log(`getEvent.js err: ${req.originalUrl} err=${err}`);
       return res.sendStatus(400);
     }
 
@@ -31,7 +31,7 @@ exports.list = (req, res) => {
     db.query(sql, date, (err, rows) => {
 
       if (err) {
-        console.log('getEvent.js err: [' + req.originalUrl + '] ' + err);
+        console.log(`getEvent.js err: ${req.originalUrl} err=${err}`);
         return res.sendStatus(400);
       }
 

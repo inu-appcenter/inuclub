@@ -14,7 +14,7 @@ let updateEvent = (db, sql, eventArray, callback) => {
     db.query(sql, eventArray, (err, result) => {
 
       if (err) {
-        console.log('postEvent.js err1: [' + req.session.userId + '] ' + err);
+        console.log(`postEvent.js err1: ${req.session.userId} err=${err}`);
         return callback(400);
       }
       callback(201);
@@ -32,17 +32,17 @@ exports.new = (req, res) => {
   let userId = req.session.userId;
   if (!userId) return res.sendStatus(401);
 
-  let eventname = req.body.eventname;
-  location = req.body.location || '';
-  date = req.body.date;
-  time = req.body.time;
+  let eventname = req.body.eventname,
+      location = req.body.location || '',
+      date = req.body.date,
+      time = req.body.time;
 
   let newEventArray = [eventname, location, date, time, userId];
   sql = `INSERT INTO club_event (eventname, location, date, time, clubname) VALUES (?, ?, ?, ?, 
               (SELECT clubname FROM club_authority WHERE authId = ?))`;
 
   updateEvent(db, sql, newEventArray, (statusCode) => {
-    console.log('postEvent.js : [' + req.session.userId + '] status:' + statusCode + ', 일정등록: ' + eventname);
+    console.log(`postEvent.js : ${userId} 일정등록=${eventname} status=${statusCode}`);
     res.sendStatus(statusCode);
   });
 };
@@ -51,16 +51,16 @@ exports.new = (req, res) => {
 exports.edit = (req, res) => {
   const db = req.app.get('db');
   let eventnum = req.params.eventnum;
-  eventname = req.body.eventname;
-  location = req.body.location;
-  date = req.body.date;
-  time = req.body.time;
+      eventname = req.body.eventname;
+      location = req.body.location;
+      date = req.body.date;
+      time = req.body.time;
 
   editEventArray = [eventname, location, date, time, eventnum];
   sql = 'UPDATE club_event SET eventname = ?, location = ?, date = ?, time = ? WHERE eventnum = ?';
 
   updateEvent(db, sql, editEventArray, (statusCode) => {
-    console.log('postEvent.js : [' + req.session.userId + '] status:' + statusCode + ', 일정수정번호 : ' + eventnum);
+    console.log(`postEvent.js : ${req.session.userId} 일정수정=${eventnum} status=${statusCode}`);
     res.sendStatus(statusCode);
   });
 };
@@ -68,17 +68,17 @@ exports.edit = (req, res) => {
 //------------------일정 삭제---------------------
 exports.delete = (req, res) => {
   const db = req.app.get('db');
-  let eventnum = req.params.eventnum;
-  sql = 'DELETE FROM club_event WHERE eventnum = ?';
+  let eventnum = req.params.eventnum,
+      sql = 'DELETE FROM club_event WHERE eventnum = ?';
 
   db.query(sql, eventnum, (err, result) => {
 
     if (err) {
-      console.log('postEvent.js err2 : [' + req.session.userId + '] ' + eventnum + '번 일정 ' + err);
+      console.log(`postEvent.js err2 : ${userId} eventnum=${eventnum} err=${err}`);
       return res.sendStatus(400);
     }
 
-    console.log('postEvent.js : [' + req.session.userId + '] ' + eventnum + '번 일정삭제');
+    console.log(`postEvent.js : ${req.session.userId} eventnum=${eventnum} 삭제`);
     res.sendStatus(201);
     
   });

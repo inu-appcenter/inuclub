@@ -12,7 +12,7 @@ exports.checkPermission = (req, res, next) => {
 
     db.query(sql, [clubnum, userId], (err, rows) => {
       if (err) {
-        console.log('util.js err1 : ' + err);
+        console.log(`util.js err1 : userId=${userId} / clubnum=${clubnum} / rows=${rows} / err=${err}`);
         res.sendStatus(400);
       } else if (rows[0].success) {
         next();
@@ -26,7 +26,7 @@ exports.checkPermission = (req, res, next) => {
 
     db.query(sql, [eventnum, userId], (err, rows) => {
       if (err || !rows.length) {
-        console.log('util.js err2 : [' + userId + '] ' + err + ', rows = ' + rows.length);
+        console.log(`util.js err2 : userId=${userId} / eventnum=${eventnum} / rows=${rows} / err=${err}`);
         res.sendStatus(400);
       } else if (rows[0].authId === userId) {
         next();

@@ -35,8 +35,8 @@ exports.multerSetting = (req, res) => {
 //------------------파일 삭제------------------
 exports.deleteFile = (location, filename, callback) => {
   fs.unlink(path.join(__dirname, '../public/') + location + '/' + filename, (err) => {
-    if (err)
-      console.log('localUpload.js err : no image [' + location + '/' + filename + '] ' + err);
+    if (err)  // 파일 없으면
+      console.log(`localUpload.js err : image=${location}/${filename} err=${err}`);
     callback();
   });
 };

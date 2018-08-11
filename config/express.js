@@ -4,8 +4,8 @@ module.exports = () => {
   const path = require('path');
   const bodyParser = require('body-parser');
   const session = require('express-session');
-  const connectRedis = require('connect-redis');
-  const RedisStore = connectRedis(session);
+  // const connectRedis = require('connect-redis');
+  // const RedisStore = connectRedis(session);
   const db = require('./db');
   const helmet = require('helmet');
   const app = express();
@@ -14,7 +14,7 @@ module.exports = () => {
   app.set('key', key);
 
   process.on('uncaughtException', (err) => {
-    console.log('Caught exception: ' + err);
+    console.log(`Caught exception: ${err}`);
   });
 
   app.use(timeout('5s'));
@@ -34,14 +34,15 @@ module.exports = () => {
       httpOnly: true,
       secure: false,
       maxAge: 3600 * 1000
-    },
+    }
+    /*,
     store: new RedisStore({
       host: app.get('key').host,
       port: app.get('key').redisPort,
       prefix: "session:",
       db: 0,
       logErrors: false
-    })
+    })*/
   }));
 
   db.connect(key, (err) => {
